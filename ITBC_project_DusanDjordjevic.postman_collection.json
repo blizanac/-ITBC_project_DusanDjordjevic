@@ -1,0 +1,575 @@
+{
+	"info": {
+		"_postman_id": "bbf100f2-39ab-4cb1-86a0-3d22870897cc",
+		"name": "ITBC_project_DusanDjordjevic",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28014245"
+	},
+	"item": [
+		{
+			"name": "Account",
+			"item": [
+				{
+					"name": "NewUser",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"randomUserName\",pm.variables.replaceIn('{{$randomFirstName}}'));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verify User Name\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.value).to.eql(pm.globals.get(\"randomUserName\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userName\": \"{{$randomUserName}}\",\r\n  \"password\": \"{{userPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{basicUrl}}Account/v1/User",
+							"host": [
+								"{{basicUrl}}Account"
+							],
+							"path": [
+								"v1",
+								"User"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GenerateToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"VerifyResult\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"User authorized successfully.\");\r",
+									"});\r",
+									"pm.test(\"VerifyStatus\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Success\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userName\": \"{{userName}}\",\r\n  \"password\": \"{{userPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{basicUrl}}Account/v1/GenerateToken",
+							"host": [
+								"{{basicUrl}}Account"
+							],
+							"path": [
+								"v1",
+								"GenerateToken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Authorized",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"VerifyUserAuthorized\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"true\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userName\": \"{{userName}}\",\r\n  \"password\": \"{{userPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{basicUrl}}Account/v1/Authorized",
+							"host": [
+								"{{basicUrl}}Account"
+							],
+							"path": [
+								"v1",
+								"Authorized"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"VerifyUserID\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"37a367e2-77a9-424a-b83b-a3f04bf62301\");\r",
+									"});\r",
+									"pm.test(\"VerifyUserName\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Caesar_Walker\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{basicUrl}}Account/v1/User/{{userId}}",
+							"host": [
+								"{{basicUrl}}Account"
+							],
+							"path": [
+								"v1",
+								"User",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{basicUrl}}Account/v1/User/{{userId}}",
+							"host": [
+								"{{basicUrl}}Account"
+							],
+							"path": [
+								"v1",
+								"User",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "BooksStore",
+			"item": [
+				{
+					"name": "GetListOfBooks",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"VerifyIsbnFirstBook\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"9781449325862\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"VerifyIsbnSecondBook\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"9781449331818\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{basicUrl}}BookStore/v1/Books",
+							"host": [
+								"{{basicUrl}}BookStore"
+							],
+							"path": [
+								"v1",
+								"Books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddBookToCollections",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([201]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"9781449331818\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userId\": \"{{userId}}\",\r\n  \"collectionOfIsbns\": [\r\n    {\r\n      \"isbn\": \"{{isbnBook2}}\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{basicUrl}}BookStore/v1/Books",
+							"host": [
+								"{{basicUrl}}BookStore"
+							],
+							"path": [
+								"v1",
+								"Books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Replacelsnb",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"VerifyNewIsbn\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"9781449337711\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userId\": \"{{userId}}\",\r\n  \"isbn\": \"{{isbnBook3}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{basicUrl}}BookStore/v1/Books/{{isbnBook2}}",
+							"host": [
+								"{{basicUrl}}BookStore"
+							],
+							"path": [
+								"v1",
+								"Books",
+								"{{isbnBook2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetBooks",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"VerifyIsbnIvBody\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"9781449337711\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{basicUrl}}BookStore/v1/Book?ISBN=9781449337711",
+							"host": [
+								"{{basicUrl}}BookStore"
+							],
+							"path": [
+								"v1",
+								"Book"
+							],
+							"query": [
+								{
+									"key": "ISBN",
+									"value": "9781449337711"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DelleteIsbn",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"isbn\": \"{{isbnBook1}}\",\r\n  \"userId\": \"{{userId}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{basicUrl}}BookStore/v1/Book",
+							"host": [
+								"{{basicUrl}}BookStore"
+							],
+							"path": [
+								"v1",
+								"Book"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DelleteUserBookCollection",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{basicUrl}}BookStore/v1/Books?UserId=37a367e2-77a9-424a-b83b-a3f04bf62301",
+							"host": [
+								"{{basicUrl}}BookStore"
+							],
+							"path": [
+								"v1",
+								"Books"
+							],
+							"query": [
+								{
+									"key": "UserId",
+									"value": "37a367e2-77a9-424a-b83b-a3f04bf62301"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{userToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "basicUrl",
+			"value": "https://demoqa.com/",
+			"type": "string"
+		},
+		{
+			"key": "userId",
+			"value": "37a367e2-77a9-424a-b83b-a3f04bf62301",
+			"type": "string"
+		},
+		{
+			"key": "userToken",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6IkNhZXNhcl9XYWxrZXIiLCJwYXNzd29yZCI6IlBlcmFwZXJpY0AxMjMiLCJpYXQiOjE2ODczNjA2NTh9.ElqsKVtKm4gyWPdfADO2YpCBv4LEAPrHelROjSDdd7Y",
+			"type": "string"
+		},
+		{
+			"key": "randomUserName",
+			"value": "",
+			"disabled": true
+		},
+		{
+			"key": "userName",
+			"value": "Caesar_Walker",
+			"type": "string"
+		},
+		{
+			"key": "userPassword",
+			"value": "Peraperic@123",
+			"type": "string"
+		},
+		{
+			"key": "randomUserName",
+			"value": ""
+		},
+		{
+			"key": "isbnBook1",
+			"value": "9781449325862",
+			"type": "string"
+		},
+		{
+			"key": "isbnBook2",
+			"value": "9781449331818",
+			"type": "string"
+		},
+		{
+			"key": "isbnBook3",
+			"value": "9781449337711",
+			"type": "string"
+		}
+	]
+}
